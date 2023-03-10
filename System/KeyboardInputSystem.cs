@@ -14,12 +14,14 @@ namespace MiniMonoGame.System
 {
     internal class KeyboardInputSystem : EntityProcessingSystem
     {
+        private readonly Globals globals;
 
         private ComponentMapper<KeyboardPlayer> keyboardPlayerMapper;
         private ComponentMapper<Transform2> transformMapper;
 
-        public KeyboardInputSystem() : base(Aspect.All(typeof(KeyboardPlayer), typeof(Transform2)))
+        public KeyboardInputSystem(Globals globals) : base(Aspect.All(typeof(KeyboardPlayer), typeof(Transform2)))
         {
+            this.globals = globals;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -44,7 +46,7 @@ namespace MiniMonoGame.System
             if (lengthSquared > 0.001f)
             {
                 direction *= 1f / MathF.Sqrt(lengthSquared);
-                transform.Position += direction * keyboardPlayer.movementSpeed;
+                transform.Position += direction * (keyboardPlayer.movementSpeed * globals.TileSize * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 transform.Rotation = MathF.Atan2(direction.Y, direction.X);
             }
         }

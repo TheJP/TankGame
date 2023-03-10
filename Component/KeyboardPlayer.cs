@@ -8,7 +8,7 @@ namespace MiniMonoGame.Component
 {
     internal class KeyboardPlayer
     {
-        /// <summary>Speed in units per second.</summary>
-        public readonly float movementSpeed = 8f;
+        /// <summary>Speed in tiles per second.</summary>
+        public readonly float movementSpeed = 3f;
     }
 }

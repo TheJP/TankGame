@@ -42,7 +42,7 @@ namespace MiniMonoGame
 
             world = new WorldBuilder()
                 .AddSystem(new RenderSystem(globals, GraphicsDevice, spriteRegistry))
-                .AddSystem(new KeyboardInputSystem())
+                .AddSystem(new KeyboardInputSystem(globals))
                 .Build();
 
             var tank = world.CreateEntity();
@@ -59,6 +59,8 @@ namespace MiniMonoGame
                 Exit();
             }
 
+            UpdateTileSize();
+
             tilemap.Update(gameTime);
             world.Update(gameTime);
 
@@ -67,8 +69,7 @@ namespace MiniMonoGame
 
         protected override void Draw(GameTime gameTime)
         {
-            // Always scale so 10 tiles fit vertically on screen.
-            globals.TileSize = (int)(GraphicsDevice.Viewport.Height * 0.1f);
+            UpdateTileSize();
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
@@ -77,5 +78,10 @@ namespace MiniMonoGame
 
             base.Draw(gameTime);
         }
+
+        /// <summary>
+        /// Always scale so 10 tiles fit vertically on screen.
+        /// </summary>
+        private void UpdateTileSize() => globals.TileSize = (int)(GraphicsDevice.Viewport.Height * 0.1f);
     }
 }
