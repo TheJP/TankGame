@@ -12,6 +12,7 @@ namespace MiniMonoGame
     internal enum SpriteType
     {
         Tank,
+        Bullet,
     }
 
     internal readonly struct Sprite
@@ -37,6 +38,7 @@ namespace MiniMonoGame
         private readonly (SpriteType type, string name, float scaleX, float scaleY)[] spriteInfosWithScale =
         {
             (Tank, "Sprites/tank_green", 46f / 64f, 42f / 64f),
+            (Bullet, "Sprites/bulletGreen3_outline", 36f / 64f, 16f / 64f),
         };
 
         private readonly Dictionary<SpriteType, Sprite> sprites = new();

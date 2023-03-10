@@ -32,11 +32,11 @@ namespace MiniMonoGame.System
 
         public override void Process(GameTime gameTime, int entity)
         {
+            var keyboard = Keyboard.GetState();
             var keyboardPlayer = keyboardPlayerMapper.Get(entity);
             var transform = transformMapper.Get(entity);
 
             var direction = Vector2.Zero;
-            var keyboard = Keyboard.GetState();
             if (keyboard.IsKeyDown(Keys.A)) { direction.X -= 1; }
             if (keyboard.IsKeyDown(Keys.D)) { direction.X += 1; }
             if (keyboard.IsKeyDown(Keys.W)) { direction.Y -= 1; }
@@ -48,6 +48,13 @@ namespace MiniMonoGame.System
                 direction *= 1f / MathF.Sqrt(lengthSquared);
                 transform.Position += direction * (keyboardPlayer.movementSpeed * globals.TileSize * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 transform.Rotation = MathF.Atan2(direction.Y, direction.X);
+            }
+
+            if (keyboard.IsKeyDown(Keys.F))
+            {
+                var bullet = CreateEntity();
+                bullet.Attach(new SpriteComponent(SpriteType.Bullet));
+                bullet.Attach(new Transform2(transform.Position, transform.Rotation));
             }
         }
     }
