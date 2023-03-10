@@ -12,16 +12,19 @@ namespace MiniMonoGame
 {
     internal class Tilemap
     {
+        private readonly Globals globals;
         private readonly string[] tileSpriteNames = { "Sprites/tileSand1", "Sprites/tileSand2" };
-        private Texture2D[] tileSprites;
-        private SpriteBatch tilemapSpriteBatch;
         private readonly List<List<int>> tileVariation = new();
         private readonly Random random = new();
 
+        private Texture2D[] tileSprites;
+        private SpriteBatch tilemapSpriteBatch;
+
         private GraphicsDevice GraphicsDevice { get; }
 
-        public Tilemap(GraphicsDevice graphicsDevice)
+        public Tilemap(Globals globals, GraphicsDevice graphicsDevice)
         {
+            this.globals = globals;
             GraphicsDevice = graphicsDevice;
         }
 
@@ -50,8 +53,10 @@ namespace MiniMonoGame
         {
         }
 
-        public void Draw(GameTime gameTime, int tileSize)
+        public void Draw(GameTime gameTime)
         {
+            var tileSize = globals.TileSize;
+
             tilemapSpriteBatch.Begin();
             for (int y = 0; y * tileSize < GraphicsDevice.Viewport.Height; ++y)
             {

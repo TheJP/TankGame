@@ -1,17 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MiniMonoGame.Component;
+using MiniMonoGame.System;
+using MonoGame.Extended;
+using MonoGame.Extended.Entities;
+using MonoGame.Extended.Sprites;
 using System;
 
 namespace MiniMonoGame
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
+        private readonly Globals globals = new();
         private readonly GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-
+        private World world;
         private Tilemap tilemap;
-        private Texture2D tankSprite;
 
         public Game()
         {
@@ -25,24 +29,38 @@ namespace MiniMonoGame
 
         protected override void Initialize()
         {
-            tilemap = new Tilemap(GraphicsDevice);
+            tilemap = new Tilemap(globals, GraphicsDevice);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            tankSprite = Content.Load<Texture2D>("Sprites/tank_green");
-
             tilemap.LoadContent(Content);
+
+            var spriteRegistry = new SpriteRegistry();
+            spriteRegistry.LoadContent(Content);
+
+            world = new WorldBuilder()
+                .AddSystem(new RenderSystem(globals, GraphicsDevice, spriteRegistry))
+                .AddSystem(new KeyboardInputSystem())
+                .Build();
+
+            var tank = world.CreateEntity();
+            tank.Attach(new Transform2(200, 200));
+            tank.Attach(new SpriteComponent(SpriteType.Tank));
+            tank.Attach(new KeyboardPlayer());
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
 
             tilemap.Update(gameTime);
+            world.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -50,15 +68,12 @@ namespace MiniMonoGame
         protected override void Draw(GameTime gameTime)
         {
             // Always scale so 10 tiles fit vertically on screen.
-            int tileSize = (int)(GraphicsDevice.Viewport.Height * 0.1f);
+            globals.TileSize = (int)(GraphicsDevice.Viewport.Height * 0.1f);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            tilemap.Draw(gameTime, tileSize);
-
-            spriteBatch.Begin();
-            spriteBatch.Draw(tankSprite, new Rectangle(0, 0, 42, 46), Color.White);
-            spriteBatch.End();
+            tilemap.Draw(gameTime);
+            world.Draw(gameTime);
 
             base.Draw(gameTime);
         }
