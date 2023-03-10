@@ -15,6 +15,8 @@ namespace MiniMonoGame
         private readonly string[] tileSpriteNames = { "Sprites/tileSand1", "Sprites/tileSand2" };
         private Texture2D[] tileSprites;
         private SpriteBatch tilemapSpriteBatch;
+        private readonly List<List<int>> tileVariation = new();
+        private readonly Random random = new();
 
         private GraphicsDevice GraphicsDevice { get; }
 
@@ -29,6 +31,21 @@ namespace MiniMonoGame
             tileSprites = tileSpriteNames.Select(content.Load<Texture2D>).ToArray();
         }
 
+        private int GetOrGenerateVariation(int x, int y)
+        {
+            while (y >= tileVariation.Count)
+            {
+                tileVariation.Add(new());
+            }
+
+            while (x >= tileVariation[y].Count)
+            {
+                tileVariation[y].Add(random.Next(0, tileSpriteNames.Length));
+            }
+
+            return tileVariation[y][x];
+        }
+
         public void Update(GameTime gameTime)
         {
         }
@@ -36,11 +53,13 @@ namespace MiniMonoGame
         public void Draw(GameTime gameTime, int tileSize)
         {
             tilemapSpriteBatch.Begin();
-            for (int y = 0; y < GraphicsDevice.Viewport.Height; y += tileSize)
+            for (int y = 0; y * tileSize < GraphicsDevice.Viewport.Height; ++y)
             {
-                for (int x = 0; x < GraphicsDevice.Viewport.Width; x += tileSize)
+                for (int x = 0; x * tileSize < GraphicsDevice.Viewport.Width; ++x)
                 {
-                    tilemapSpriteBatch.Draw(tileSprites[0], new Rectangle(x, y, tileSize, tileSize), Color.White);
+                    var variation = GetOrGenerateVariation(x, y);
+                    var rectangle = new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+                    tilemapSpriteBatch.Draw(tileSprites[variation], rectangle, Color.White);
                 }
             }
             tilemapSpriteBatch.End();
