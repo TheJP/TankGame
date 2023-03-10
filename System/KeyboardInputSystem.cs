@@ -36,6 +36,7 @@ namespace MiniMonoGame.System
             var keyboardPlayer = keyboardPlayerMapper.Get(entity);
             var transform = transformMapper.Get(entity);
 
+            // Handle movement and rotation.
             var direction = Vector2.Zero;
             if (keyboard.IsKeyDown(Keys.A)) { direction.X -= 1; }
             if (keyboard.IsKeyDown(Keys.D)) { direction.X += 1; }
@@ -50,11 +51,14 @@ namespace MiniMonoGame.System
                 transform.Rotation = MathF.Atan2(direction.Y, direction.X);
             }
 
+            // Handle bullet firing.
             if (keyboard.IsKeyDown(Keys.F))
             {
                 var bullet = CreateEntity();
                 bullet.Attach(new SpriteComponent(SpriteType.Bullet));
                 bullet.Attach(new Transform2(transform.Position, transform.Rotation));
+                bullet.Attach(new Velocity(new Vector2(MathF.Cos(transform.Rotation), MathF.Sin(transform.Rotation))));
+                bullet.Attach(new Expiring(gameTime.TotalGameTime + TimeSpan.FromSeconds(20)));
             }
         }
     }

@@ -43,6 +43,7 @@ namespace MiniMonoGame
             world = new WorldBuilder()
                 .AddSystem(new RenderSystem(globals, GraphicsDevice, spriteRegistry))
                 .AddSystem(new KeyboardInputSystem(globals))
+                .AddSystem(new ExpirationSystem())
                 .Build();
 
             var tank = world.CreateEntity();
