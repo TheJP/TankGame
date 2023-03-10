@@ -1,3 +1,3 @@
 ﻿
-using var game = new MiniMonoGame.MiniMonoGame();
+using var game = new MiniMonoGame.Game();
 game.Run();
