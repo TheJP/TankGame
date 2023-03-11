@@ -10,5 +10,6 @@ namespace MiniMonoGame.Service
     {
         public int TileSize { get; set; }
         public int TileBaseSize { get; } = 64;
+        public float RenderScale => (float)TileSize / (float)TileBaseSize;
     }
 }

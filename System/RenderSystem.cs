@@ -38,7 +38,7 @@ namespace MiniMonoGame.System
 
         public override void Draw(GameTime gameTime)
         {
-            float globalScale = (float)globals.TileSize / (float)globals.TileBaseSize;
+            float globalScale = globals.RenderScale;
 
             spriteBatch.Begin();
             foreach (var entity in ActiveEntities)
@@ -46,11 +46,9 @@ namespace MiniMonoGame.System
                 var spriteType = spriteMapper.Get(entity).Type;
                 var transform = transformMapper.Get(entity);
                 var sprite = spriteRegistry[spriteType];
+                var middle = new Vector2(sprite.Bounds.Width * 0.5f, sprite.Bounds.Height * 0.5f);
 
-                var scale = new Vector2(sprite.scaleX, sprite.scaleY) * globalScale;
-                var middle = new Vector2(sprite.texture.Bounds.Width * 0.5f, sprite.texture.Bounds.Height * 0.5f);
-
-                spriteBatch.Draw(sprite.texture, transform.Position, null, Color.White, transform.Rotation, middle, scale, SpriteEffects.None, 0);
+                spriteBatch.Draw(sprite, transform.Position, null, Color.White, transform.Rotation, middle, globalScale, SpriteEffects.None, 0);
             }
             spriteBatch.End();
         }

@@ -13,51 +13,30 @@ namespace MiniMonoGame.Service
     {
         Tank,
         Bullet,
-    }
-
-    internal readonly struct Sprite
-    {
-        public readonly Texture2D texture;
-        public readonly float scaleX;
-        public readonly float scaleY;
-
-        public Sprite(Texture2D texture, float scaleX, float scaleY)
-        {
-            this.texture = texture;
-            this.scaleX = scaleX;
-            this.scaleY = scaleY;
-        }
+        Crate,
     }
 
     internal class SpriteRegistry
     {
         private readonly (SpriteType type, string name)[] spriteInfos =
         {
+            (Tank, "Sprites/tank_green"),
+            (Bullet, "Sprites/bulletGreen3_outline"),
+            (Crate, "Sprites/crateMetal"),
         };
 
-        private readonly (SpriteType type, string name, float scaleX, float scaleY)[] spriteInfosWithScale =
-        {
-            (Tank, "Sprites/tank_green", 46f / 64f, 42f / 64f),
-            (Bullet, "Sprites/bulletGreen3_outline", 36f / 64f, 16f / 64f),
-        };
-
-        private readonly Dictionary<SpriteType, Sprite> sprites = new();
+        private readonly Dictionary<SpriteType, Texture2D> sprites = new();
 
         public void LoadContent(ContentManager content)
         {
-            var spriteInfosCombined = spriteInfos
-                .Select(name => (name.type, name.name, scaleX: 1f, scaleY: 1f))
-                .Union(spriteInfosWithScale);
-
-            foreach (var spriteInfo in spriteInfosCombined)
+            foreach (var spriteInfo in spriteInfos)
             {
                 var texture = content.Load<Texture2D>(spriteInfo.name);
-                var sprite = new Sprite(texture, spriteInfo.scaleX, spriteInfo.scaleY);
-                sprites.Add(spriteInfo.type, sprite);
+                sprites.Add(spriteInfo.type, texture);
             }
         }
 
-        public Sprite this[SpriteType type] => sprites[type];
-        public Sprite GetSprite(SpriteType type) => sprites[type];
+        public Texture2D this[SpriteType type] => sprites[type];
+        public Texture2D GetSprite(SpriteType type) => sprites[type];
     }
 }
