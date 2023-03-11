@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MiniMonoGame.SpriteType;
+using static MiniMonoGame.Service.SpriteType;
 
-namespace MiniMonoGame
+namespace MiniMonoGame.Service
 {
     internal enum SpriteType
     {

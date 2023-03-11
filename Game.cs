@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MiniMonoGame.Component;
+using MiniMonoGame.Service;
 using MiniMonoGame.System;
 using MonoGame.Extended;
 using MonoGame.Extended.Entities;
@@ -40,10 +41,17 @@ namespace MiniMonoGame
             var spriteRegistry = new SpriteRegistry();
             spriteRegistry.LoadContent(Content);
 
+            var playerBullet = new BulletSpecification()
+            {
+                FiringCooldown = TimeSpan.FromMilliseconds(300),
+                FlyingSpeed = 8f,
+            };
+
             world = new WorldBuilder()
                 .AddSystem(new RenderSystem(globals, GraphicsDevice, spriteRegistry))
-                .AddSystem(new KeyboardInputSystem(globals))
+                .AddSystem(new KeyboardInputSystem(globals, playerBullet))
                 .AddSystem(new ExpirationSystem())
+                .AddSystem(new VelocitySystem(globals))
                 .Build();
 
             var tank = world.CreateEntity();

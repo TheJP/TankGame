@@ -10,5 +10,7 @@ namespace MiniMonoGame.Component
     {
         /// <summary>Speed in tiles per second.</summary>
         public readonly float movementSpeed = 3f;
+
+        public TimeSpan LastBulletFired { get; set; } = TimeSpan.Zero;
     }
 }
