@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MiniMonoGame.Component;
+using MiniMonoGame.Renderer;
 using MiniMonoGame.Service;
 using MiniMonoGame.System;
 using MonoGame.Extended;
@@ -15,6 +16,7 @@ namespace MiniMonoGame
         private readonly GraphicsDeviceManager graphics;
         private World world;
         private Tilemap tilemap;
+        private Crossair crossair;
         private TrackParticleSystem trackParticleSystem;
 
         public Game()
@@ -24,12 +26,13 @@ namespace MiniMonoGame
             graphics.PreferredBackBufferWidth = 1920;
 
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
         protected override void Initialize()
         {
             tilemap = new Tilemap(GraphicsDevice);
+            crossair = new Crossair(GraphicsDevice);
             trackParticleSystem = new TrackParticleSystem(GraphicsDevice);
             base.Initialize();
         }
@@ -37,6 +40,7 @@ namespace MiniMonoGame
         protected override void LoadContent()
         {
             tilemap.LoadContent(Content);
+            crossair.LoadContent(Content);
 
             var spriteRegistry = new SpriteRegistry();
             spriteRegistry.LoadContent(Content);
@@ -54,13 +58,21 @@ namespace MiniMonoGame
                 .AddSystem(new VelocitySystem())
                 .AddSystem(new HitSystem())
                 .AddSystem(new SpawnTrackParticlesSystem(trackParticleSystem))
-                .AddSystem(new CrateSpawnSystem())
+                .AddSystem(new SpawnCrateSystem())
                 .Build();
 
+            var transform = new Transform2(5, 5);
+
             var tank = world.CreateEntity();
-            tank.Attach(new Transform2(5, 5));
+            tank.Attach(transform);
             tank.Attach(new SpriteComponent(SpriteType.Tank));
             tank.Attach(new KeyboardPlayer());
+
+            var barrel = world.CreateEntity();
+            barrel.Attach(new Transform2(transform.Position));
+            barrel.Attach(new SpriteComponent(SpriteType.Barrel));
+
+            tank.Attach(new Tank(barrel.Id));
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,6 +101,7 @@ namespace MiniMonoGame
             tilemap.Draw(gameTime);
             trackParticleSystem.Draw(gameTime);
             world.Draw(gameTime);
+            crossair.Draw(gameTime);
 
             base.Draw(gameTime);
         }

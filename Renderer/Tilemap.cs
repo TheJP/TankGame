@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniMonoGame
+namespace MiniMonoGame.Renderer
 {
     internal class Tilemap
     {

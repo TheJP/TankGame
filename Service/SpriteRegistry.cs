@@ -21,7 +21,7 @@ namespace MiniMonoGame.Service
     {
         private readonly (SpriteType type, string name)[] spriteInfos =
         {
-            (Tank, "Sprites/tank_green"),
+            (Tank, "Sprites/tankBody_green"),
             (Bullet, "Sprites/bulletGreen3_outline"),
             (Crate, "Sprites/crateMetal"),
             (Barrel, "Sprites/tankGreen_barrel3_outline"),

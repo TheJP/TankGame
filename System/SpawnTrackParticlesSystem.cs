@@ -16,38 +16,38 @@ namespace MiniMonoGame.System
     {
         private readonly TrackParticleSystem particleSystem;
 
-        private ComponentMapper<KeyboardPlayer> keyboardPlayerMapper;
+        private ComponentMapper<Tank> tankMapper;
         private ComponentMapper<Transform2> transformMapper;
 
-        public SpawnTrackParticlesSystem(TrackParticleSystem particleSystem) : base(Aspect.All(typeof(KeyboardPlayer), typeof(Transform2)))
+        public SpawnTrackParticlesSystem(TrackParticleSystem particleSystem) : base(Aspect.All(typeof(Tank), typeof(Transform2)))
         {
             this.particleSystem = particleSystem;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
         {
-            keyboardPlayerMapper = mapperService.GetMapper<KeyboardPlayer>();
+            tankMapper = mapperService.GetMapper<Tank>();
             transformMapper = mapperService.GetMapper<Transform2>();
         }
 
         public override void Process(GameTime gameTime, int entity)
         {
-            var keyboardPlayer = keyboardPlayerMapper.Get(entity);
+            var tank = tankMapper.Get(entity);
             var transform = transformMapper.Get(entity);
 
-            if ((gameTime.TotalGameTime - keyboardPlayer.LastTrackParticle) <= keyboardPlayer.ParticleSpawnCooldown)
+            if ((gameTime.TotalGameTime - tank.LastTrackParticle) <= tank.ParticleSpawnCooldown)
             {
                 return;
             }
 
-            if ((keyboardPlayer.LastParticalPosition - transform.Position).LengthSquared() <
-                keyboardPlayer.ParticleMinDistance * keyboardPlayer.ParticleMinDistance)
+            if ((tank.LastParticalPosition - transform.Position).LengthSquared() <
+                tank.ParticleMinDistance * tank.ParticleMinDistance)
             {
                 return;
             }
 
-            keyboardPlayer.LastTrackParticle = gameTime.TotalGameTime;
-            keyboardPlayer.LastParticalPosition = transform.Position;
+            tank.LastTrackParticle = gameTime.TotalGameTime;
+            tank.LastParticalPosition = transform.Position;
 
             var direction = new Vector2(MathF.Cos(transform.Rotation), MathF.Sin(transform.Rotation));
             var perpendicularDirection = new Vector2(-direction.Y, direction.X);
