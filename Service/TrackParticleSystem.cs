@@ -58,10 +58,11 @@ namespace MiniMonoGame.Service
             var particleScale = new Vector2(4f, 8f);
             var middle = Vector2.One * 0.5f;
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
             foreach (var particle in Particles)
             {
-                spriteBatch.Draw(particleTexture, particle.Position * Globals.Instance.TileSize, null, ParticleColour, particle.Rotation, middle, globalScale * particleScale, SpriteEffects.None, 0);
+                var colour = new Color(ParticleColour, 1f - (float)((gameTime.TotalGameTime - particle.SpawnTime).TotalSeconds / ParticleLiveTime.TotalSeconds));
+                spriteBatch.Draw(particleTexture, particle.Position * Globals.Instance.TileSize, null, colour, particle.Rotation, middle, globalScale * particleScale, SpriteEffects.None, 0);
             }
             spriteBatch.End();
         }

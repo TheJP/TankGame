@@ -39,7 +39,15 @@ namespace MiniMonoGame.System
             {
                 return;
             }
+
+            if ((keyboardPlayer.LastParticalPosition - transform.Position).LengthSquared() <
+                keyboardPlayer.ParticleMinDistance * keyboardPlayer.ParticleMinDistance)
+            {
+                return;
+            }
+
             keyboardPlayer.LastTrackParticle = gameTime.TotalGameTime;
+            keyboardPlayer.LastParticalPosition = transform.Position;
 
             var direction = new Vector2(MathF.Cos(transform.Rotation), MathF.Sin(transform.Rotation));
             var perpendicularDirection = new Vector2(-direction.Y, direction.X);
