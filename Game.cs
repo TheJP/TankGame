@@ -54,17 +54,13 @@ namespace MiniMonoGame
                 .AddSystem(new VelocitySystem())
                 .AddSystem(new HitSystem())
                 .AddSystem(new SpawnTrackParticlesSystem(trackParticleSystem))
+                .AddSystem(new CrateSpawnSystem())
                 .Build();
 
             var tank = world.CreateEntity();
             tank.Attach(new Transform2(5, 5));
             tank.Attach(new SpriteComponent(SpriteType.Tank));
             tank.Attach(new KeyboardPlayer());
-
-            var crate = world.CreateEntity();
-            crate.Attach(new Transform2(7, 7));
-            crate.Attach(new SpriteComponent(SpriteType.Crate));
-            crate.Attach(new Hitable(new CircleHitbox(20f / (float)Globals.Instance.TileBaseSize)));
         }
 
         protected override void Update(GameTime gameTime)
