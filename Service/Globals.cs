@@ -8,7 +8,7 @@ namespace MiniMonoGame.Service
 {
     internal class Globals
     {
-        private readonly static Lazy<Globals> instance = new Lazy<Globals>();
+        private readonly static Lazy<Globals> instance = new();
         public static Globals Instance => instance.Value;
 
         public int TileSize { get; set; }

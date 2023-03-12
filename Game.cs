@@ -15,6 +15,7 @@ namespace MiniMonoGame
         private readonly GraphicsDeviceManager graphics;
         private World world;
         private Tilemap tilemap;
+        private TrackParticleSystem trackParticleSystem;
 
         public Game()
         {
@@ -29,6 +30,7 @@ namespace MiniMonoGame
         protected override void Initialize()
         {
             tilemap = new Tilemap(GraphicsDevice);
+            trackParticleSystem = new TrackParticleSystem(GraphicsDevice);
             base.Initialize();
         }
 
@@ -51,6 +53,7 @@ namespace MiniMonoGame
                 .AddSystem(new ExpirationSystem())
                 .AddSystem(new VelocitySystem())
                 .AddSystem(new HitSystem())
+                .AddSystem(new SpawnTrackParticlesSystem(trackParticleSystem))
                 .Build();
 
             var tank = world.CreateEntity();
@@ -75,6 +78,7 @@ namespace MiniMonoGame
             UpdateTileSize();
 
             tilemap.Update(gameTime);
+            trackParticleSystem.Update(gameTime);
             world.Update(gameTime);
 
             base.Update(gameTime);
@@ -87,6 +91,7 @@ namespace MiniMonoGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             tilemap.Draw(gameTime);
+            trackParticleSystem.Draw(gameTime);
             world.Draw(gameTime);
 
             base.Draw(gameTime);

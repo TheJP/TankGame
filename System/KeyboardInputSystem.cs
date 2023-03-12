@@ -48,7 +48,7 @@ namespace MiniMonoGame.System
             if (lengthSquared > 0.001f)
             {
                 direction *= 1f / MathF.Sqrt(lengthSquared);
-                transform.Position += direction * (keyboardPlayer.movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                transform.Position += direction * (keyboardPlayer.MovementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 transform.Rotation = MathF.Atan2(direction.Y, direction.X);
             }
 

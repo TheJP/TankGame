@@ -9,8 +9,12 @@ namespace MiniMonoGame.Component
     internal class KeyboardPlayer
     {
         /// <summary>Speed in tiles per second.</summary>
-        public readonly float movementSpeed = 3f;
+        public readonly float MovementSpeed = 3f;
+
+        public readonly TimeSpan ParticleSpawnCooldown = TimeSpan.FromMilliseconds(50);
 
         public TimeSpan LastBulletFired { get; set; } = TimeSpan.Zero;
+
+        public TimeSpan LastTrackParticle { get; set; } = TimeSpan.Zero;
     }
 }
