@@ -14,6 +14,7 @@ namespace MiniMonoGame.Service
         Tank,
         Bullet,
         Crate,
+        Barrel,
     }
 
     internal class SpriteRegistry
@@ -23,6 +24,7 @@ namespace MiniMonoGame.Service
             (Tank, "Sprites/tank_green"),
             (Bullet, "Sprites/bulletGreen3_outline"),
             (Crate, "Sprites/crateMetal"),
+            (Barrel, "Sprites/tankGreen_barrel3_outline"),
         };
 
         private readonly Dictionary<SpriteType, Texture2D> sprites = new();

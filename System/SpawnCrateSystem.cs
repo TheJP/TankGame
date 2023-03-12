@@ -12,18 +12,18 @@ using System.Threading.Tasks;
 
 namespace MiniMonoGame.System
 {
-    internal class CrateSpawnSystem : EntityUpdateSystem
+    internal class SpawnCrateSystem : EntityUpdateSystem
     {
         private const int MaxCrates = 10;
         private const float SpawnRangeX = 18f;
         private const float SpawnRangeY = 10f;
         private const float CrateHitBox = 20f / 64f;
-        private static readonly TimeSpan SpawnCooldown = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan SpawnCooldown = TimeSpan.FromSeconds(3);
 
         private readonly Random random = new();
         private TimeSpan lastSpawn = -SpawnCooldown;
 
-        public CrateSpawnSystem() : base(Aspect.All(typeof(Crate))) { }
+        public SpawnCrateSystem() : base(Aspect.All(typeof(Crate))) { }
 
         public override void Initialize(IComponentMapperService mapperService) { }
 

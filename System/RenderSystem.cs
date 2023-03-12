@@ -38,7 +38,7 @@ namespace MiniMonoGame.System
         {
             float globalScale = Globals.Instance.RenderScale;
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(samplerState: SamplerState.PointWrap);
             foreach (var entity in ActiveEntities)
             {
                 var spriteType = spriteMapper.Get(entity).Type;

@@ -56,7 +56,7 @@ namespace MiniMonoGame
         {
             var tileSize = Globals.Instance.TileSize;
 
-            tilemapSpriteBatch.Begin();
+            tilemapSpriteBatch.Begin(samplerState: SamplerState.PointWrap);
             for (int y = 0; y * tileSize < GraphicsDevice.Viewport.Height; ++y)
             {
                 for (int x = 0; x * tileSize < GraphicsDevice.Viewport.Width; ++x)
