@@ -6,14 +6,12 @@ using MiniMonoGame.Service;
 using MiniMonoGame.System;
 using MonoGame.Extended;
 using MonoGame.Extended.Entities;
-using MonoGame.Extended.Sprites;
 using System;
 
 namespace MiniMonoGame
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
-        private readonly Globals globals = new();
         private readonly GraphicsDeviceManager graphics;
         private World world;
         private Tilemap tilemap;
@@ -30,7 +28,7 @@ namespace MiniMonoGame
 
         protected override void Initialize()
         {
-            tilemap = new Tilemap(globals, GraphicsDevice);
+            tilemap = new Tilemap(GraphicsDevice);
             base.Initialize();
         }
 
@@ -48,16 +46,22 @@ namespace MiniMonoGame
             };
 
             world = new WorldBuilder()
-                .AddSystem(new RenderSystem(globals, GraphicsDevice, spriteRegistry))
-                .AddSystem(new KeyboardInputSystem(globals, playerBullet))
+                .AddSystem(new RenderSystem(GraphicsDevice, spriteRegistry))
+                .AddSystem(new KeyboardInputSystem(playerBullet))
                 .AddSystem(new ExpirationSystem())
-                .AddSystem(new VelocitySystem(globals))
+                .AddSystem(new VelocitySystem())
+                .AddSystem(new HitSystem())
                 .Build();
 
             var tank = world.CreateEntity();
-            tank.Attach(new Transform2(200, 200));
+            tank.Attach(new Transform2(5, 5));
             tank.Attach(new SpriteComponent(SpriteType.Tank));
             tank.Attach(new KeyboardPlayer());
+
+            var crate = world.CreateEntity();
+            crate.Attach(new Transform2(7, 7));
+            crate.Attach(new SpriteComponent(SpriteType.Crate));
+            crate.Attach(new Hitable(new CircleHitbox(20f / (float)Globals.Instance.TileBaseSize)));
         }
 
         protected override void Update(GameTime gameTime)
@@ -91,6 +95,6 @@ namespace MiniMonoGame
         /// <summary>
         /// Always scale so 10 tiles fit vertically on screen.
         /// </summary>
-        private void UpdateTileSize() => globals.TileSize = (int)(GraphicsDevice.Viewport.Height * 0.1f);
+        private void UpdateTileSize() => Globals.Instance.TileSize = (int)(GraphicsDevice.Viewport.Height * 0.1f);
     }
 }

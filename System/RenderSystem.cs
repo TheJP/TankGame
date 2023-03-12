@@ -16,16 +16,14 @@ namespace MiniMonoGame.System
 {
     internal class RenderSystem : EntityDrawSystem
     {
-        private readonly Globals globals;
         private readonly SpriteBatch spriteBatch;
         private readonly SpriteRegistry spriteRegistry;
 
         private ComponentMapper<SpriteComponent> spriteMapper;
         private ComponentMapper<Transform2> transformMapper;
 
-        public RenderSystem(Globals globals, GraphicsDevice graphicsDevice, SpriteRegistry spriteRegistry) : base(Aspect.All(typeof(SpriteComponent), typeof(Transform2)))
+        public RenderSystem(GraphicsDevice graphicsDevice, SpriteRegistry spriteRegistry) : base(Aspect.All(typeof(SpriteComponent), typeof(Transform2)))
         {
-            this.globals = globals;
             spriteBatch = new SpriteBatch(graphicsDevice);
             this.spriteRegistry = spriteRegistry;
         }
@@ -38,7 +36,7 @@ namespace MiniMonoGame.System
 
         public override void Draw(GameTime gameTime)
         {
-            float globalScale = globals.RenderScale;
+            float globalScale = Globals.Instance.RenderScale;
 
             spriteBatch.Begin();
             foreach (var entity in ActiveEntities)
@@ -46,9 +44,11 @@ namespace MiniMonoGame.System
                 var spriteType = spriteMapper.Get(entity).Type;
                 var transform = transformMapper.Get(entity);
                 var sprite = spriteRegistry[spriteType];
+
+                var position = transform.Position * Globals.Instance.TileSize;
                 var middle = new Vector2(sprite.Bounds.Width * 0.5f, sprite.Bounds.Height * 0.5f);
 
-                spriteBatch.Draw(sprite, transform.Position, null, Color.White, transform.Rotation, middle, globalScale, SpriteEffects.None, 0);
+                spriteBatch.Draw(sprite, position, null, Color.White, transform.Rotation, middle, globalScale, SpriteEffects.None, 0);
             }
             spriteBatch.End();
         }

@@ -13,7 +13,6 @@ namespace MiniMonoGame
 {
     internal class Tilemap
     {
-        private readonly Globals globals;
         private readonly string[] tileSpriteNames = { "Sprites/tileSand1", "Sprites/tileSand2" };
         private readonly List<List<int>> tileVariation = new();
         private readonly Random random = new();
@@ -23,9 +22,8 @@ namespace MiniMonoGame
 
         private GraphicsDevice GraphicsDevice { get; }
 
-        public Tilemap(Globals globals, GraphicsDevice graphicsDevice)
+        public Tilemap(GraphicsDevice graphicsDevice)
         {
-            this.globals = globals;
             GraphicsDevice = graphicsDevice;
         }
 
@@ -56,7 +54,7 @@ namespace MiniMonoGame
 
         public void Draw(GameTime gameTime)
         {
-            var tileSize = globals.TileSize;
+            var tileSize = Globals.Instance.TileSize;
 
             tilemapSpriteBatch.Begin();
             for (int y = 0; y * tileSize < GraphicsDevice.Viewport.Height; ++y)

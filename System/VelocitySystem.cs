@@ -14,14 +14,11 @@ namespace MiniMonoGame.System
 {
     internal class VelocitySystem : EntityProcessingSystem
     {
-        private readonly Globals globals;
-
         private ComponentMapper<Velocity> velocityMapper;
         private ComponentMapper<Transform2> transformMapper;
 
-        public VelocitySystem(Globals globals) : base(Aspect.All(typeof(Velocity), typeof(Transform2)))
+        public VelocitySystem() : base(Aspect.All(typeof(Velocity), typeof(Transform2)))
         {
-            this.globals = globals;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -34,7 +31,7 @@ namespace MiniMonoGame.System
         {
             var velocity = velocityMapper.Get(entity).Value;
             var transform = transformMapper.Get(entity);
-            transform.Position += velocity * (globals.TileSize * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            transform.Position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }

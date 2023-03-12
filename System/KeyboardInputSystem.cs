@@ -15,15 +15,13 @@ namespace MiniMonoGame.System
 {
     internal class KeyboardInputSystem : EntityProcessingSystem
     {
-        private readonly Globals globals;
         private readonly BulletSpecification playerBullet;
 
         private ComponentMapper<KeyboardPlayer> keyboardPlayerMapper;
         private ComponentMapper<Transform2> transformMapper;
 
-        public KeyboardInputSystem(Globals globals, BulletSpecification playerBullet) : base(Aspect.All(typeof(KeyboardPlayer), typeof(Transform2)))
+        public KeyboardInputSystem(BulletSpecification playerBullet) : base(Aspect.All(typeof(KeyboardPlayer), typeof(Transform2)))
         {
-            this.globals = globals;
             this.playerBullet = playerBullet;
         }
 
@@ -50,7 +48,7 @@ namespace MiniMonoGame.System
             if (lengthSquared > 0.001f)
             {
                 direction *= 1f / MathF.Sqrt(lengthSquared);
-                transform.Position += direction * (keyboardPlayer.movementSpeed * globals.TileSize * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                transform.Position += direction * (keyboardPlayer.movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 transform.Rotation = MathF.Atan2(direction.Y, direction.X);
             }
 
@@ -63,6 +61,7 @@ namespace MiniMonoGame.System
                 bullet.Attach(new Transform2(transform.Position, transform.Rotation));
                 bullet.Attach(new Velocity(new Vector2(MathF.Cos(transform.Rotation), MathF.Sin(transform.Rotation)) * playerBullet.FlyingSpeed));
                 bullet.Attach(new Expiring(gameTime.TotalGameTime + TimeSpan.FromSeconds(20)));
+                bullet.Attach(new Bullet());
             }
         }
     }
