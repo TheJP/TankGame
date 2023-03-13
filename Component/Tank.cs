@@ -12,6 +12,9 @@ namespace MiniMonoGame.Component
         /// <summary>Speed in tiles per second.</summary>
         public readonly float MovementSpeed = 3f;
 
+        /// <summary>Turn speed in radians per second.</summary>
+        public readonly float RotationSpeed = MathF.PI;
+
         public readonly TimeSpan ParticleSpawnCooldown = TimeSpan.FromMilliseconds(50);
 
         public readonly float ParticleMinDistance = 0.1f;

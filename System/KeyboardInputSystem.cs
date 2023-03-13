@@ -18,7 +18,6 @@ namespace MiniMonoGame.System
         private readonly BulletSpecification playerBullet;
 
         private ComponentMapper<Tank> tankMapper;
-        private ComponentMapper<KeyboardPlayer> keyboardPlayerMapper;
         private ComponentMapper<Transform2> transformMapper;
 
         public KeyboardInputSystem(BulletSpecification playerBullet) : base(Aspect.All(typeof(Tank), typeof(KeyboardPlayer), typeof(Transform2)))
@@ -29,7 +28,6 @@ namespace MiniMonoGame.System
         public override void Initialize(IComponentMapperService mapperService)
         {
             tankMapper = mapperService.GetMapper<Tank>();
-            keyboardPlayerMapper = mapperService.GetMapper<KeyboardPlayer>();
             transformMapper = mapperService.GetMapper<Transform2>();
         }
 
@@ -39,11 +37,10 @@ namespace MiniMonoGame.System
             var keyboard = Keyboard.GetState();
 
             var tank = tankMapper.Get(entity);
-            var keyboardPlayer = keyboardPlayerMapper.Get(entity);
             var transform = transformMapper.Get(entity);
             var barrel = transformMapper.Get(tank.BarrelEntity);
 
-            // Handle movement and rotation.
+            // Handle tank movement.
             var direction = Vector2.Zero;
             if (keyboard.IsKeyDown(Keys.A)) { direction.X -= 1; }
             if (keyboard.IsKeyDown(Keys.D)) { direction.X += 1; }
@@ -53,10 +50,25 @@ namespace MiniMonoGame.System
             var lengthSquared = direction.LengthSquared();
             if (lengthSquared > 0.001f)
             {
-                direction *= 1f / MathF.Sqrt(lengthSquared);
-                transform.Position += direction * (tank.MovementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                transform.Rotation = MathF.Atan2(direction.Y, direction.X);
+                var drivingDirection = new Vector2(MathF.Cos(transform.Rotation), MathF.Sin(transform.Rotation));
+                transform.Position += drivingDirection * (tank.MovementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 barrel.Position = transform.Position;
+            }
+
+            // Handle tank rotation animation.
+            if (lengthSquared > 0.001f)
+            {
+                var targetRotation = MathF.Atan2(direction.Y, direction.X);
+                var rotationDifference = Util.AngleDifference(transform.Rotation, targetRotation);
+                if (MathF.Abs(rotationDifference) < tank.RotationSpeed * gameTime.ElapsedGameTime.TotalSeconds)
+                {
+                    transform.Rotation = targetRotation;
+                }
+                else
+                {
+                    var rotationDirection = MathF.Sign(rotationDifference);
+                    transform.Rotation += rotationDirection * tank.RotationSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
             }
 
             // Make Barrel rotate to mouse position.
